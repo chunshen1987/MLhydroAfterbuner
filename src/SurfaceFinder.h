@@ -9,10 +9,10 @@
 
 class SurfaceFinder {
  private:
-    int hydro_type;
+    //int hydro_type;
     std::shared_ptr<Hydroinfo_MUSIC> hydroinfo_MUSIC_ptr;
     ParameterReader *paraRdr;
-    double e_sw_;
+    //double e_sw_;
 
  public:
     SurfaceFinder() = delete;

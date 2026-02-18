@@ -67,7 +67,7 @@ bool SurfaceFinder::check_intersect(double e_sw, double tau, double x,
 }
 
 int SurfaceFinder::Find_full_hypersurface(double e_sw) {
-    ofstream output;
+    std::ofstream output;
     output.open("hyper_surface_2+1d.dat", std::ios::binary);
 
     double grid_tau0, grid_tauf, grid_x0, grid_y0;
@@ -87,8 +87,8 @@ int SurfaceFinder::Find_full_hypersurface(double e_sw) {
     lattice_spacing[1] = grid_dx;
     lattice_spacing[2] = grid_dy;
 
-    Cornelius* cornelius_ptr = new Cornelius();
-    cornelius_ptr->init(dim, e_sw, lattice_spacing);
+    Cornelius cornelius;
+    cornelius.init(dim, e_sw, lattice_spacing);
 
     int ntime = static_cast<int>((grid_tauf - grid_tau0)/grid_dt);
     int nx = static_cast<int>(fabs(2.*grid_x0)/grid_dx);
@@ -120,23 +120,22 @@ int SurfaceFinder::Find_full_hypersurface(double e_sw) {
                                                  y_local, grid_dt, grid_dx,
                                                  grid_dy, cube);
                 if (intersect) {
-                    cornelius_ptr->find_surface_3d(cube);
-                    for (int isurf = 0; isurf < cornelius_ptr->get_Nelements();
+                    cornelius.find_surface_3d(cube);
+                    for (int isurf = 0; isurf < cornelius.get_Nelements();
                          isurf++) {
                         double tau_center = (
-                                cornelius_ptr->get_centroid_elem(isurf, 0)
+                                cornelius.get_centroid_elem(isurf, 0)
                                 + tau_local - grid_dt/2.);
                         double x_center = (
-                                cornelius_ptr->get_centroid_elem(isurf, 1)
+                                cornelius.get_centroid_elem(isurf, 1)
                                 + x_local - grid_dx/2.);
                         double y_center = (
-                                cornelius_ptr->get_centroid_elem(isurf, 2)
+                                cornelius.get_centroid_elem(isurf, 2)
                                 + y_local - grid_dy/2.);
 
-                        double da_tau =
-                                cornelius_ptr->get_normal_elem(isurf, 0);
-                        double da_x = cornelius_ptr->get_normal_elem(isurf, 1);
-                        double da_y = cornelius_ptr->get_normal_elem(isurf, 2);
+                        double da_tau = cornelius.get_normal_elem(isurf, 0);
+                        double da_x = cornelius.get_normal_elem(isurf, 1);
+                        double da_y = cornelius.get_normal_elem(isurf, 2);
                         hydroinfo_MUSIC_ptr->getHydroValues(
                             x_center, y_center, etas, tau_center,
                             fluidCellptr);
@@ -190,7 +189,6 @@ int SurfaceFinder::Find_full_hypersurface(double e_sw) {
     output.close();
 
     delete fluidCellptr;
-    delete cornelius_ptr;
     delete [] lattice_spacing;
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 2; j++)

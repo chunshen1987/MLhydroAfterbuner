@@ -81,7 +81,7 @@ void Hydroinfo_MUSIC::readHydroData(int whichHydro) {
     turn_on_diff = static_cast<int>(header[14]);
     const int nVar_per_cell = static_cast<int>(header[15]);
 
-    float cell_info[nVar_per_cell];
+    float* cell_info = new float [nVar_per_cell];
 
     int itau_max = 0;
     fluidCell_3D_ideal zeroCell;
@@ -99,7 +99,7 @@ void Hydroinfo_MUSIC::readHydroData(int whichHydro) {
     int ik = 0;
     while (true) {
         status = 0;
-        status = std::fread(&cell_info, sizeof(float), nVar_per_cell, fin);
+        status = std::fread(cell_info, sizeof(float), nVar_per_cell, fin);
         if (status == 0) break;
         if (status != nVar_per_cell) {
             cerr << "[Hydroinfo_MUSIC::readHydroData]: ERROR: "
@@ -150,6 +150,8 @@ void Hydroinfo_MUSIC::readHydroData(int whichHydro) {
     cout << "hydro_dx = " << hydroDx << " fm" << endl;
     cout << "hydro_eta_max = " << hydro_eta_max << endl;
     cout << "hydro_deta = " << hydroDeta << endl;
+
+    delete[] cell_info;
 }
 
 

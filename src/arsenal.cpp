@@ -1149,11 +1149,12 @@ void get_bin_average_and_count(istream& is, ostream& os, vector<double>* bins, l
 
   // create the counting array
   if (wanted_data_columns>0) number_of_cols = wanted_data_columns;
-  double bin_total_and_count[number_of_bins][number_of_cols+2];
-  for (long i=0; i<number_of_bins; i++)
-  for (long j=0; j<number_of_cols+2; j++)
-  {
-    bin_total_and_count[i][j] = 0;
+  double **bin_total_and_count = new double *[number_of_bins];
+  for (long i=0; i<number_of_bins; i++) {
+      bin_total_and_count[i] = new double[number_of_cols+2];
+      for (long j=0; j<number_of_cols+2; j++) {
+          bin_total_and_count[i][j] = 0;
+      }
   }
 
   // add up all data
@@ -1205,4 +1206,8 @@ void get_bin_average_and_count(istream& is, ostream& os, vector<double>* bins, l
     os << endl;
   }
 
+  for (long i=0; i<number_of_bins; i++) {
+      delete[] bin_total_and_count[i];
+  }
+  delete[] bin_total_and_count;
 }
