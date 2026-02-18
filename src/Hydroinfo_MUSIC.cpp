@@ -154,20 +154,9 @@ void Hydroinfo_MUSIC::readHydroData(int whichHydro) {
 
 
 void Hydroinfo_MUSIC::getHydroValues(float x, float y,
-                                     float z, float t, fluidCell* info) {
+                                     float eta, float tau, fluidCell* info) {
 // For interpolation of evolution files in tau-eta coordinates. Only the
 // reading of MUSIC's evolution_xyeta.dat file is implemented here.
-// For simplicity, hydro_eta_max refers to MUSIC's eta_size, and similarly for
-// hydroDeta; however, x, y, z, and t are as usual to stay compatible with
-// MARTINI.
-    float tau, eta;
-    if (t*t > z*z) {
-        tau = sqrt(t*t-z*z);
-        eta = 0.5*log((t+z)/(t-z));
-    } else {
-        tau = 0.;
-        eta = 0.;
-    }
 
     int itau = static_cast<int>((tau-hydroTau0)/hydroDtau + 0.0001);
     int ix   = static_cast<int>((hydroXmax+x)/hydroDx + 0.0001);
@@ -191,13 +180,15 @@ void Hydroinfo_MUSIC::getHydroValues(float x, float y,
              << ", ix=" << ix << ", ixmax=" << ixmax << endl;
         cout << "x=" << x << " y=" << y << " eta=" << eta
              << " ix=" << ix << " iy=" << iy << " ieta=" << ieta << endl;
-        cout << "t=" << t << " tau=" << tau
+        cout << " tau=" << tau
              << " itau=" << itau << " itaumax=" << itaumax << endl;
 
+        info->ed = 0.0;
         info->temperature = 0.0;
-        info->vx = 0.0;
-        info->vy = 0.0;
-        info->vz = 0.0;
+        info->utau = 1.0;
+        info->ux = 0.0;
+        info->uy = 0.0;
+        info->ueta = 0.0;
         return;
     }
 
@@ -207,13 +198,15 @@ void Hydroinfo_MUSIC::getHydroValues(float x, float y,
              << ", iymax=" << ixmax << endl;
         cout << "x=" << x << " y=" << y << " eta=" << eta
              << " ix=" << ix << " iy=" << iy << " ieta=" << ieta << endl;
-        cout << "t=" << t << " tau=" << tau
+        cout << " tau=" << tau
              << " itau=" << itau << " itaumax=" << itaumax << endl;
 
+        info->ed = 0.0;
         info->temperature = 0.0;
-        info->vx = 0.0;
-        info->vy = 0.0;
-        info->vz = 0.0;
+        info->utau = 1.0;
+        info->ux = 0.0;
+        info->uy = 0.0;
+        info->ueta = 0.0;
         return;
     }
 
@@ -225,10 +218,12 @@ void Hydroinfo_MUSIC::getHydroValues(float x, float y,
              << ", hydroTauMax = " << hydroTauMax
              << ", hydroDtau = " << hydroDtau << endl;
 
+        info->ed = 0.0;
         info->temperature = 0.0;
-        info->vx = 0.0;
-        info->vy = 0.0;
-        info->vz = 0.0;
+        info->utau = 1.0;
+        info->ux = 0.0;
+        info->uy = 0.0;
+        info->ueta = 0.0;
         return;
     }
 
@@ -236,10 +231,12 @@ void Hydroinfo_MUSIC::getHydroValues(float x, float y,
         cout << "[Hydroinfo_MUSIC::getHydroValues]: WARNING - "
              << "eta out of range, ieta=" << ieta << ", ietamax=" << ietamax
              << endl;
+        info->ed = 0.0;
         info->temperature = 0.0;
-        info->vx = 0.0;
-        info->vy = 0.0;
-        info->vz = 0.0;
+        info->utau = 1.0;
+        info->ux = 0.0;
+        info->uy = 0.0;
+        info->ueta = 0.0;
         return;
     }
 
@@ -284,9 +281,7 @@ void Hydroinfo_MUSIC::getHydroValues(float x, float y,
     float T = 0.0;
     float ed = 0.;
     float p = 0.;
-    float vx = 0.0;
-    float vy = 0.0;
-    float vz = 0.0;
+    float utau = 1.0;
     float ux = 0.0;
     float uy = 0.0;
     float uz = 0.0;
@@ -303,8 +298,6 @@ void Hydroinfo_MUSIC::getHydroValues(float x, float y,
     float pi33 = 0.0;
     float bulkPi = 0.0;
 
-    fluidCell_2D *HydroCell_2D_ptr1, *HydroCell_2D_ptr2;
-    fluidCell_3D *HydroCell_3D_ptr1, *HydroCell_3D_ptr2;
     fluidCell_3D_ideal *HydroCell_3D_ideal_ptr1, *HydroCell_3D_ideal_ptr2;
     for (int iptau = 0; iptau < 2; iptau++) {
         float taufactor;
@@ -350,27 +343,24 @@ void Hydroinfo_MUSIC::getHydroValues(float x, float y,
         }
     }
 
+    float sinh_eta = sinh(eta);
+    float cosh_eta = cosh(eta);
     if (hydroType_ == 4) {
+        // full (3+1)D case
         float ut = sqrt(1. + ux*ux + uy*uy + uz*uz);
-        vx = ux/ut;
-        vy = uy/ut;
-        vz = uz/ut;
+        utau = ut*cosh_eta - uz*sinh_eta;
+        ueta = - ut*sinh_eta + uz*cosh_eta;
     } else {
-        float eta_local = 0.5*log((t + z)/(t - z));
-        float sinh_eta = sinh(eta_local);
-        float cosh_eta = cosh(eta_local);
-        float utau = sqrt(1. + ux*ux + uy*uy + ueta*ueta);
-        float uz = utau*sinh_eta + ueta*cosh_eta;
-        float ut = utau*cosh_eta + ueta*sinh_eta;
-        vx = ux/ut;
-        vy = uy/ut;
-        vz = uz/ut;
+        // boost invariant
+        utau = sqrt(1. + ux*ux + uy*uy);
+        ueta = 0.;
     }
 
     info->temperature = T;
-    info->vx = vx;
-    info->vy = vy;
-    info->vz = vz;
+    info->utau = utau;
+    info->ux = ux;
+    info->uy = uy;
+    info->ueta = ueta;
 
     info->ed = ed;
     info->sd = (ed + p)/(T + 1e-16);

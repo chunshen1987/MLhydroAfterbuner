@@ -14,14 +14,6 @@ SurfaceFinder::SurfaceFinder(std::shared_ptr<Hydroinfo_MUSIC> hydroinfo_ptr_in,
                              ParameterReader* paraRdr_in) {
     paraRdr = paraRdr_in;
     hydroinfo_MUSIC_ptr = hydroinfo_ptr_in;
-    e_sw_ = paraRdr->getVal("e_sw");
-}
-
-SurfaceFinder::SurfaceFinder(std::shared_ptr<Hydroinfo_MUSIC> hydroinfo_ptr_in,
-                             ParameterReader* paraRdr_in, double e_sw) {
-    paraRdr = paraRdr_in;
-    hydroinfo_MUSIC_ptr = hydroinfo_ptr_in;
-    e_sw_ = e_sw;
 }
 
 SurfaceFinder::~SurfaceFinder() {}
@@ -74,9 +66,9 @@ bool SurfaceFinder::check_intersect(double e_sw, double tau, double x,
     return(intersect);
 }
 
-int SurfaceFinder::Find_full_hypersurface() {
+int SurfaceFinder::Find_full_hypersurface(double e_sw) {
     ofstream output;
-    output.open("hyper_surface_2+1d.dat");
+    output.open("hyper_surface_2+1d.dat", std::ios::binary);
 
     double grid_tau0, grid_tauf, grid_x0, grid_y0;
     grid_tau0 = hydroinfo_MUSIC_ptr->get_hydro_tau0();
@@ -114,6 +106,8 @@ int SurfaceFinder::Find_full_hypersurface() {
 
     fluidCell *fluidCellptr = new fluidCell();
 
+    const int FOsize = 34;
+    const float etas = 0.0;
     for (int itime = 0; itime < ntime; itime++) {
         // loop over time evolution
         double tau_local = grid_tau0 + (itime + 0.5)*grid_dt;
@@ -144,18 +138,48 @@ int SurfaceFinder::Find_full_hypersurface() {
                         double da_x = cornelius_ptr->get_normal_elem(isurf, 1);
                         double da_y = cornelius_ptr->get_normal_elem(isurf, 2);
                         hydroinfo_MUSIC_ptr->getHydroValues(
-                            x_center, y_center, 0.0, tau_center,
+                            x_center, y_center, etas, tau_center,
                             fluidCellptr);
 
-                        output << scientific << setw(18) << setprecision(8) 
-                               << tau_center << "   " << x_center << "   "
-                               << y_center << "   " 
-                               << da_tau << "   " << da_x << "   "
-                               << da_y << "   " 
-                               << fluidCellptr->temperature << "   "
-                               << fluidCellptr->vx << "   " << fluidCellptr->vy 
-                               << endl;
+                        double eps_plus_p_over_T = (
+                                fluidCellptr->ed + fluidCellptr->pressure)
+                                / fluidCellptr->temperature;
 
+                        std::vector<float> array(FOsize);
+                        array[0] = static_cast<float>(tau_center);
+                        array[1] = static_cast<float>(x_center);
+                        array[2] = static_cast<float>(y_center);
+                        array[3] = static_cast<float>(etas);
+                        array[4] = static_cast<float>(da_tau);
+                        array[5] = static_cast<float>(da_x);
+                        array[6] = static_cast<float>(da_y);
+                        array[7] = static_cast<float>(0.0);
+                        array[8] = static_cast<float>(fluidCellptr->utau);
+                        array[9] = static_cast<float>(fluidCellptr->ux);
+                        array[10] = static_cast<float>(fluidCellptr->uy);
+                        array[11] = static_cast<float>(fluidCellptr->ueta);
+                        array[12] = static_cast<float>(fluidCellptr->ed);
+                        array[13] = static_cast<float>(fluidCellptr->temperature);
+                        array[14] = static_cast<float>(0.0);
+                        array[15] = static_cast<float>(0.0);
+                        array[16] = static_cast<float>(0.0);
+                        array[17] = static_cast<float>(eps_plus_p_over_T);
+                        array[18] = static_cast<float>(fluidCellptr->pi[0][0]);
+                        array[19] = static_cast<float>(fluidCellptr->pi[0][1]);
+                        array[20] = static_cast<float>(fluidCellptr->pi[0][2]);
+                        array[21] = static_cast<float>(fluidCellptr->pi[0][3]);
+                        array[22] = static_cast<float>(fluidCellptr->pi[1][1]);
+                        array[23] = static_cast<float>(fluidCellptr->pi[1][2]);
+                        array[24] = static_cast<float>(fluidCellptr->pi[1][3]);
+                        array[25] = static_cast<float>(fluidCellptr->pi[2][2]);
+                        array[26] = static_cast<float>(fluidCellptr->pi[2][3]);
+                        array[27] = static_cast<float>(fluidCellptr->pi[3][3]);
+                        array[28] = static_cast<float>(fluidCellptr->bulkPi);
+                        array[29] = static_cast<float>(0.0);
+                        array[30] = static_cast<float>(0.0);
+                        array[31] = static_cast<float>(0.0);
+                        array[32] = static_cast<float>(0.0);
+                        array[33] = static_cast<float>(0.0);
                     }
                 }
             }

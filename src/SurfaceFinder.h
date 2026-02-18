@@ -19,13 +19,11 @@ class SurfaceFinder {
 
     SurfaceFinder(std::shared_ptr<Hydroinfo_MUSIC> hydroinfo_ptr_in,
                   ParameterReader* paraRdr_in);
-    SurfaceFinder(std::shared_ptr<Hydroinfo_MUSIC> hydroinfo_ptr_in,
-                  ParameterReader* paraRdr_in, double e_sw);
     ~SurfaceFinder();
 
     bool check_intersect(double e_sw, double tau, double x, double y,
                          double dt, double dx, double dy, double ***cube);
-    int Find_full_hypersurface();
+    int Find_full_hypersurface(double e_sw);
 };
 
 #endif  // SRC_SurfaceFinder_H_

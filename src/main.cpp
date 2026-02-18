@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     paraRdr->readFromArguments(argc, argv);
     paraRdr->echo();
 
-    int load_viscous = paraRdr->getVal("load_viscous_info");
+    //int load_viscous = paraRdr->getVal("load_viscous_info");
     int hydro_type   = paraRdr->getVal("hydro_type");
 
     std::shared_ptr<Hydroinfo_MUSIC> hydroinfo_ptr = (
@@ -49,8 +49,9 @@ int main(int argc, char *argv[]) {
     //fluidcellanalysis.output_flowvelocity_vs_tau();
 
     // construct freeze-out hyper-surface
-    // SurfaceFinder* surface_ptr = new SurfaceFinder(hydroinfo_ptr, paraRdr);
-    // surface_ptr->Find_full_hypersurface();
+    double e_sw = paraRdr->getVal("e_sw");      // GeV/fm^3
+    SurfaceFinder surface(hydroinfo_ptr, paraRdr);
+    surface.Find_full_hypersurface(e_sw);
 
     sw.toc();
     std::cout << "totally takes : " << sw.takeTime() << " seconds."

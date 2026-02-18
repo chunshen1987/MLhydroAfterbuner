@@ -7,7 +7,7 @@ namespace PhysConsts {
 
 struct fluidCell {
    float ed, sd, temperature, pressure;
-   float vx, vy, vz;
+   float utau, ux, uy, ueta;
    float pi[4][4];
    float bulkPi;
 };
