@@ -51,7 +51,11 @@ int main(int argc, char *argv[]) {
     // construct freeze-out hyper-surface
     double e_sw = paraRdr->getVal("e_sw");      // GeV/fm^3
     SurfaceFinder surface(hydroinfo_ptr, paraRdr);
-    surface.Find_full_hypersurface(e_sw);
+    if (hydro_type == 3) {
+        surface.Find_full_hypersurface(e_sw);
+    } else if (hydro_type == 4) {
+        surface.Find_full_hypersurface_3D(e_sw);
+    }
 
     sw.toc();
     std::cout << "totally takes : " << sw.takeTime() << " seconds."
