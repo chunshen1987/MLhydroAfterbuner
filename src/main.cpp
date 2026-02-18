@@ -35,13 +35,12 @@ int main(int argc, char *argv[]) {
     Stopwatch sw;
     sw.tic();
     // hydro data file pointer
-    if (hydro_type == 3) {
-        int hydro_mode = 9;
-        hydroinfo_ptr->readHydroData(hydro_mode);
-    } else if (hydro_type == 31) {
+    if (hydro_type == 31) {
+        // 31: (2+1)D hydro MUSIC (no grid Chun's format)
         int hydro_mode = 11;
         hydroinfo_ptr->readHydroData(hydro_mode);
     } else if (hydro_type == 4) {
+        // 4: (3+1)D hydro MUSIC (no grid Chun's format)
         int hydro_mode = 10;
         hydroinfo_ptr->readHydroData(hydro_mode);
     } else {

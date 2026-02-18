@@ -28,10 +28,9 @@ class Hydroinfo_MUSIC {
 
     int nskip_tau, nskip_x, nskip_eta;
 
-    int hydroWhichHydro;    // choose a hydro evolution model to use
-    int use_tau_eta_coordinate;
+    int hydroType_;    // choose a hydro evolution model to use
 
-    bool boost_invariant;
+    bool boost_invariant_;
 
     int itaumax, ixmax, ietamax;
     int turn_on_shear;
@@ -65,8 +64,6 @@ class Hydroinfo_MUSIC {
 
     void getHydroValues(float x, float y, float z, float t,
                         fluidCell *info);
-    void getHydroValuesWithEMFields(
-        float x, float y, float z, float t, fluidCellIdealWithEM* info);
     void output_temperature_evolution(std::string filename_base);
     void update_grid_info(float tau0, float tau_max, float dtau,
                           float x_max, float dx, float z_max, float dz);
