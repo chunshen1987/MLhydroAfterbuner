@@ -1,0 +1,12 @@
+hydro_type = 13      # type of the hydro evolution file
+                     # 3: (2+1)D hydro MUSIC (on regular grid Chun's format)
+                     # 31: (2+1)D hydro MUSIC (no grid Chun's format)
+                     # 4: (3+1)D hydro MUSIC (no grid Chun's format)
+
+# lattice spacings to analysis the hydro medium
+grid_dt = 0.04       # lattice spacing in tau (fm)
+grid_dx = 0.2        # lattice spacing in x (fm)
+grid_dy = 0.2        # lattice spacing in y (fm)
+
+load_viscous_info = 0  # switch to load dissipative information
+e_sw = 0.3             # desired local energy density for surface finder (GeV/fm^3)
