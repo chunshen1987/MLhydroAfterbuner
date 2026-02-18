@@ -134,7 +134,7 @@ void Hydroinfo_MUSIC::readHydroData(int whichHydro) {
     // create the index map
     long long ncells = (itaumax + 1)*ixmax*iymax*ietamax;
     idx_map_.resize(ncells, 0);
-    for (int i = 0; i < lattice_3D_ideal.size(); i++) {
+    for (unsigned int i = 0; i < lattice_3D_ideal.size(); i++) {
         const auto cell_i = lattice_3D_ideal[i];
         int cell_idx = (
             (  (cell_i.itau*ietamax + cell_i.ieta)*iymax

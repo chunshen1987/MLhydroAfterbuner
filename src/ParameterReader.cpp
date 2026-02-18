@@ -63,7 +63,7 @@ long ParameterReader::find(string name)
   Check if the parameter with "name" already exists in the internal "names" list. If yes, it returns its
 */
 {
-  for (long ii=0; ii<names->size(); ii++)
+  for (unsigned long ii=0; ii<names->size(); ii++)
     if ((*names)[ii].compare(toLower(trim(name)))==0) return ii;
   return -1;
 }
@@ -164,6 +164,6 @@ void ParameterReader::echo()
 */
 {
   if (names->size()==0) return;
-  for (long ii=0; ii<names->size(); ii++) cout << (*names)[ii] << "=" << (*values)[ii] << "  ";
+  for (unsigned long ii=0; ii<names->size(); ii++) cout << (*names)[ii] << "=" << (*values)[ii] << "  ";
   cout << endl;
 }
