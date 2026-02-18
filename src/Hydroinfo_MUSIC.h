@@ -20,9 +20,12 @@ class Hydroinfo_MUSIC {
     float hydroDtau;       // step dtau in fm/c in the hydro data files
     float hydroXmax;       // maximum x in fm in the hydro data files
                             // [-xmax, +xmax] for both x and y
+    float hydroYmax;       // maximum x in fm in the hydro data files
+                            // [-xmax, +xmax] for both x and y
     float hydro_eta_max;       // maximum z in fm in the hydro data files
                             // [-zmax, +zmax] for 3D hydro
     float hydroDx;         // step dx in fm in the hydro data files
+    float hydroDy;         // step dx in fm in the hydro data files
     float hydroDeta;         // step dz in fm in the hydro data files in
                             // the z-direction for 3D hydro
 
@@ -32,7 +35,7 @@ class Hydroinfo_MUSIC {
 
     bool boost_invariant_;
 
-    int itaumax, ixmax, ietamax;
+    int itaumax, ixmax, iymax, ietamax;
     int turn_on_shear;
     int turn_on_bulk;
     int turn_on_rhob;
@@ -52,9 +55,11 @@ class Hydroinfo_MUSIC {
     float get_hydro_tau0() {return(hydroTau0);}
     float get_hydro_dtau() {return(hydroDtau);}
     float get_hydro_dx() {return(hydroDx);}
+    float get_hydro_dy() {return(hydroDy);}
     float get_hydro_deta() {return(hydroDeta);}
     float get_hydro_eta_max() {return(hydro_eta_max);}
     float get_hydro_x_max() {return(hydroXmax);}
+    float get_hydro_y_max() {return(hydroYmax);}
     int get_hydro_Nskip_tau() {return(nskip_tau);}
     int get_hydro_Nskip_x() {return(nskip_x);}
     int get_hydro_Nskip_eta() {return(nskip_eta);}

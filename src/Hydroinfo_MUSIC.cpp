@@ -72,6 +72,9 @@ void Hydroinfo_MUSIC::readHydroData(int whichHydro) {
     ixmax = static_cast<int>(header[2]);
     hydroDx = header[3];
     hydroXmax = std::abs(header[4]);
+    iymax = static_cast<int>(header[5]);
+    hydroDy = header[6];
+    hydroYmax = std::abs(header[7]);
     ietamax = static_cast<int>(header[8]);
     hydroDeta = header[9];
     hydro_eta_max = std::abs(header[10]);
@@ -129,12 +132,12 @@ void Hydroinfo_MUSIC::readHydroData(int whichHydro) {
     std::fclose(fin);
     itaumax = itau_max;
     // create the index map
-    long long ncells = (itaumax + 1)*ixmax*ixmax*ietamax;
+    long long ncells = (itaumax + 1)*ixmax*iymax*ietamax;
     idx_map_.resize(ncells, 0);
     for (int i = 0; i < lattice_3D_ideal.size(); i++) {
         const auto cell_i = lattice_3D_ideal[i];
         int cell_idx = (
-            (  (cell_i.itau*ietamax + cell_i.ieta)*ixmax
+            (  (cell_i.itau*ietamax + cell_i.ieta)*iymax
              + cell_i.iy)*ixmax + cell_i.ix);
         idx_map_[cell_idx] = i;
     }
@@ -194,10 +197,10 @@ void Hydroinfo_MUSIC::getHydroValues(float x, float y, float eta,
         return;
     }
 
-    if (iy < 0 || iy >= ixmax) {
+    if (iy < 0 || iy >= iymax) {
         cout << "[Hydroinfo_MUSIC::getHydroValues]: "
              << "WARNING - y out of range, y=" << y << ", iy="  << iy
-             << ", iymax=" << ixmax << endl;
+             << ", iymax=" << iymax << endl;
         cout << "x=" << x << " y=" << y << " eta=" << eta
              << " ix=" << ix << " iy=" << iy << " ieta=" << ieta << endl;
         cout << " tau=" << tau
@@ -253,7 +256,7 @@ void Hydroinfo_MUSIC::getHydroValues(float x, float y, float eta,
         }
         for (int ipy = 0; ipy < 2; ipy++) {
             int py;
-            if (ipy == 0 || iy == ixmax-1) {
+            if (ipy == 0 || iy == iymax-1) {
                 py = iy;
             } else {
                 py = iy + 1;
@@ -273,7 +276,7 @@ void Hydroinfo_MUSIC::getHydroValues(float x, float y, float eta,
                         ptau = itau + 1;
                     }
                     position[ipx][ipy][ipeta][iptau] = (
-                                px + ixmax*(py + ixmax*(peta + ietamax*ptau)));
+                                px + ixmax*(py + iymax*(peta + ietamax*ptau)));
                 }
             }
         }
@@ -399,7 +402,7 @@ void Hydroinfo_MUSIC::output_temperature_evolution(string filename_base) {
         ofstream temp_evo(filename.str().c_str());
         for (int ix = 0; ix < ixmax; ix++) {
             float x_local = -hydroXmax + ix*hydroDx;
-            for (int iy = 0; iy < ixmax; iy++) {
+            for (int iy = 0; iy < iymax; iy++) {
                 float y_local = -hydroXmax + iy*hydroDx;
                 getHydroValues(x_local, y_local, 0.0, tau, hydroInfo);
                 float temp_local = hydroInfo->temperature;

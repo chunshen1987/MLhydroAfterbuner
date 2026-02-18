@@ -23,7 +23,12 @@ class SurfaceFinder {
 
     bool check_intersect(double e_sw, double tau, double x, double y,
                          double dt, double dx, double dy, double ***cube);
+    bool check_intersect_3D(
+        double e_sw, double tau, double x, double y, double eta_s,
+        double dtau, double dx, double dy, double deta_s, double ****cube);
+
     int Find_full_hypersurface(double e_sw);
+    int Find_full_hypersurface_3D(double e_sw);
 };
 
 #endif  // SRC_SurfaceFinder_H_
