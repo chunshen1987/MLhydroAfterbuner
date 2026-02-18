@@ -41,7 +41,7 @@ void Hydroinfo_MUSIC::readHydroData(int whichHydro) {
     // read in setups of the hydro simulation
     cout << "Using new MUSIC hydro format (no grid) reading data ..."
          << endl;
-    if (whichHydro == 10) {
+    if (whichHydro == 4) {
         boost_invariant_ = false;
     } else {
         boost_invariant_ = true;
@@ -350,7 +350,7 @@ void Hydroinfo_MUSIC::getHydroValues(float x, float y,
         }
     }
 
-    if (hydroType_ == 10) {
+    if (hydroType_ == 4) {
         float ut = sqrt(1. + ux*ux + uy*uy + uz*uz);
         vx = ux/ut;
         vy = uy/ut;

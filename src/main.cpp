@@ -35,18 +35,9 @@ int main(int argc, char *argv[]) {
     Stopwatch sw;
     sw.tic();
     // hydro data file pointer
-    if (hydro_type == 31) {
-        // 31: (2+1)D hydro MUSIC (no grid Chun's format)
-        int hydro_mode = 11;
-        hydroinfo_ptr->readHydroData(hydro_mode);
-    } else if (hydro_type == 4) {
-        // 4: (3+1)D hydro MUSIC (no grid Chun's format)
-        int hydro_mode = 10;
-        hydroinfo_ptr->readHydroData(hydro_mode);
-    } else {
-        cout << "main: unrecognized hydro_type = " << hydro_type << endl;
-        exit(1);
-    }
+    // 3: (2+1)D hydro MUSIC (no grid Chun's format)
+    // 4: (3+1)D hydro MUSIC (no grid Chun's format)
+    hydroinfo_ptr->readHydroData(hydro_type);
 
     //FluidcellStatistic fluidcellanalysis(hydroinfo_ptr_in, paraRdr);
     //fluidcellanalysis.outputTempasTauvsX();

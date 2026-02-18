@@ -1,6 +1,5 @@
-hydro_type = 13      # type of the hydro evolution file
-                     # 3: (2+1)D hydro MUSIC (on regular grid Chun's format)
-                     # 31: (2+1)D hydro MUSIC (no grid Chun's format)
+hydro_type = 3       # type of the hydro evolution file
+                     # 3: (2+1)D hydro MUSIC (no grid Chun's format)
                      # 4: (3+1)D hydro MUSIC (no grid Chun's format)
 
 # lattice spacings to analysis the hydro medium
