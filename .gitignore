@@ -42,4 +42,4 @@
 
 MLhydroAfterbuner
 *.dat
-results/*
+results*/*
