@@ -88,7 +88,7 @@ int SurfaceFinder::Find_full_hypersurface(double e_sw) {
     lattice_spacing[2] = grid_dy;
 
     Cornelius* cornelius_ptr = new Cornelius();
-    cornelius_ptr->init(dim, e_sw_, lattice_spacing);
+    cornelius_ptr->init(dim, e_sw, lattice_spacing);
 
     int ntime = static_cast<int>((grid_tauf - grid_tau0)/grid_dt);
     int nx = static_cast<int>(fabs(2.*grid_x0)/grid_dx);
@@ -116,7 +116,7 @@ int SurfaceFinder::Find_full_hypersurface(double e_sw) {
             double x_local = grid_x0 + (i + 0.5)*grid_dx;
             for (int j = 0; j < ny; j++) {
                 double y_local = grid_y0 + (j + 0.5)*grid_dy;
-                bool intersect = check_intersect(e_sw_, tau_local, x_local,
+                bool intersect = check_intersect(e_sw, tau_local, x_local,
                                                  y_local, grid_dt, grid_dx,
                                                  grid_dy, cube);
                 if (intersect) {
@@ -160,9 +160,9 @@ int SurfaceFinder::Find_full_hypersurface(double e_sw) {
                         array[11] = static_cast<float>(fluidCellptr->ueta);
                         array[12] = static_cast<float>(fluidCellptr->ed);
                         array[13] = static_cast<float>(fluidCellptr->temperature);
-                        array[14] = static_cast<float>(0.0);
-                        array[15] = static_cast<float>(0.0);
-                        array[16] = static_cast<float>(0.0);
+                        array[14] = static_cast<float>(0.0);    // mu_B
+                        array[15] = static_cast<float>(0.0);    // mu_S
+                        array[16] = static_cast<float>(0.0);    // mu_Q
                         array[17] = static_cast<float>(eps_plus_p_over_T);
                         array[18] = static_cast<float>(fluidCellptr->pi[0][0]);
                         array[19] = static_cast<float>(fluidCellptr->pi[0][1]);
@@ -175,11 +175,13 @@ int SurfaceFinder::Find_full_hypersurface(double e_sw) {
                         array[26] = static_cast<float>(fluidCellptr->pi[2][3]);
                         array[27] = static_cast<float>(fluidCellptr->pi[3][3]);
                         array[28] = static_cast<float>(fluidCellptr->bulkPi);
-                        array[29] = static_cast<float>(0.0);
-                        array[30] = static_cast<float>(0.0);
-                        array[31] = static_cast<float>(0.0);
-                        array[32] = static_cast<float>(0.0);
-                        array[33] = static_cast<float>(0.0);
+                        array[29] = static_cast<float>(0.0);    // rhob
+                        array[30] = static_cast<float>(0.0);    // VB^0
+                        array[31] = static_cast<float>(0.0);    // VB^1
+                        array[32] = static_cast<float>(0.0);    // VB^2
+                        array[33] = static_cast<float>(0.0);    // VB^3 
+                        for (int i = 0; i < FOsize; i++)
+                            output.write((char *)&(array[i]), sizeof(float));
                     }
                 }
             }

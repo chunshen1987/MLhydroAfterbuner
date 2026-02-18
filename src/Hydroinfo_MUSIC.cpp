@@ -153,8 +153,8 @@ void Hydroinfo_MUSIC::readHydroData(int whichHydro) {
 }
 
 
-void Hydroinfo_MUSIC::getHydroValues(float x, float y,
-                                     float eta, float tau, fluidCell* info) {
+void Hydroinfo_MUSIC::getHydroValues(float x, float y, float eta,
+                                     float tau, fluidCell* info) {
 // For interpolation of evolution files in tau-eta coordinates. Only the
 // reading of MUSIC's evolution_xyeta.dat file is implemented here.
 

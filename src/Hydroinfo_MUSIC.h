@@ -62,7 +62,7 @@ class Hydroinfo_MUSIC {
 
     void readHydroData(int whichHydro);
 
-    void getHydroValues(float x, float y, float z, float t,
+    void getHydroValues(float x, float y, float eta, float tau,
                         fluidCell *info);
     void output_temperature_evolution(std::string filename_base);
     void update_grid_info(float tau0, float tau_max, float dtau,
