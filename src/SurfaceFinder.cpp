@@ -114,8 +114,9 @@ int SurfaceFinder::Find_full_hypersurface(double e_sw) {
     grid_tau0 = hydroinfo_MUSIC_ptr->get_hydro_tau0();
     grid_tauf = hydroinfo_MUSIC_ptr->get_hydro_tau_max();
     grid_x0 = (- hydroinfo_MUSIC_ptr->get_hydro_x_max()
-               + hydroinfo_MUSIC_ptr->get_hydro_dx());
-    grid_y0 = grid_x0;
+               + 2*hydroinfo_MUSIC_ptr->get_hydro_dx());
+    grid_y0 = (- hydroinfo_MUSIC_ptr->get_hydro_y_max()
+               + 2*hydroinfo_MUSIC_ptr->get_hydro_dy());
 
     double grid_dt = paraRdr->getVal("grid_dt");
     double grid_dx = paraRdr->getVal("grid_dx");
@@ -249,9 +250,9 @@ int SurfaceFinder::Find_full_hypersurface_3D(double e_sw) {
     grid_tauf = hydroinfo_MUSIC_ptr->get_hydro_tau_max();
     double grid_x0, grid_y0, grid_etas0;
     grid_x0 = (- hydroinfo_MUSIC_ptr->get_hydro_x_max()
-               + hydroinfo_MUSIC_ptr->get_hydro_dx());
+               + 2*hydroinfo_MUSIC_ptr->get_hydro_dx());
     grid_y0 = (- hydroinfo_MUSIC_ptr->get_hydro_y_max()
-               + hydroinfo_MUSIC_ptr->get_hydro_dy());
+               + 2*hydroinfo_MUSIC_ptr->get_hydro_dy());
     grid_etas0 = (- hydroinfo_MUSIC_ptr->get_hydro_eta_max()
                  + hydroinfo_MUSIC_ptr->get_hydro_deta());
 

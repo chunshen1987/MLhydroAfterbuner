@@ -39,15 +39,6 @@ int main(int argc, char *argv[]) {
     // 4: (3+1)D hydro MUSIC (no grid Chun's format)
     hydroinfo_ptr->readHydroData(hydro_type);
 
-    //FluidcellStatistic fluidcellanalysis(hydroinfo_ptr_in, paraRdr);
-    //fluidcellanalysis.outputTempasTauvsX();
-    //fluidcellanalysis.outputKnudersonNumberasTauvsX();
-    //fluidcellanalysis.outputinverseReynoldsNumberasTauvsX();
-    ////double T_cut = paraRdr->getVal("T_cut");
-    ////fluidcellanalysis.analysis_hydro_volume_for_photon(T_cut);
-    //fluidcellanalysis.output_temperature_vs_avg_utau();
-    //fluidcellanalysis.output_flowvelocity_vs_tau();
-
     // construct freeze-out hyper-surface
     double e_sw = paraRdr->getVal("e_sw");      // GeV/fm^3
     SurfaceFinder surface(hydroinfo_ptr, paraRdr);

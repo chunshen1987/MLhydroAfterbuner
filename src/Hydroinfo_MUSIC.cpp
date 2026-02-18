@@ -151,6 +151,8 @@ void Hydroinfo_MUSIC::readHydroData(int whichHydro) {
     cout << "hydry_dtau = " << hydroDtau << " fm" << endl;
     cout << "hydro_Xmax = " << hydroXmax << " fm" << endl;
     cout << "hydro_dx = " << hydroDx << " fm" << endl;
+    cout << "hydro_Ymax = " << hydroYmax << " fm" << endl;
+    cout << "hydro_dy = " << hydroDy << " fm" << endl;
     cout << "hydro_eta_max = " << hydro_eta_max << endl;
     cout << "hydro_deta = " << hydroDeta << endl;
 
@@ -165,12 +167,12 @@ void Hydroinfo_MUSIC::getHydroValues(float x, float y, float eta,
 
     int itau = static_cast<int>((tau-hydroTau0)/hydroDtau + 0.0001);
     int ix   = static_cast<int>((hydroXmax+x)/hydroDx + 0.0001);
-    int iy   = static_cast<int>((hydroXmax+y)/hydroDx + 0.0001);
+    int iy   = static_cast<int>((hydroYmax+y)/hydroDy + 0.0001);
     int ieta = static_cast<int>((hydro_eta_max+eta)/hydroDeta + 0.0001);
 
     float taufrac = (tau - hydroTau0)/hydroDtau - static_cast<float>(itau);
     float xfrac   = (x - (static_cast<float>(ix)*hydroDx - hydroXmax))/hydroDx;
-    float yfrac   = (y - (static_cast<float>(iy)*hydroDx - hydroXmax))/hydroDx;
+    float yfrac   = (y - (static_cast<float>(iy)*hydroDy - hydroYmax))/hydroDy;
     float etafrac = (eta/hydroDeta - static_cast<float>(ieta)
                      + 0.5*static_cast<float>(ietamax));
 
